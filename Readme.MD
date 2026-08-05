@@ -36,32 +36,6 @@ A media tracking application with FastAPI backend and React frontend.
 |----------|-------------|----------|
 | `VITE_API_BASE_URL` | Backend API base URL | Yes |
 
-## Security Fixes (Pre-Deployment)
-
-The following security issues have been addressed:
-
-### 1. Password Hashing (Fixed)
-- **Issue:** Passwords were stored and compared in plaintext
-- **Fix:** Added `passlib[bcrypt]` for secure password hashing
-- **Files:** `backend/app/core/security.py`, `backend/app/auth/service.py`
-- **Migration:** Existing users with plaintext passwords will need to reset passwords or run a rehash script
-
-### 2. HttpOnly JWT Cookie (Fixed)
-- **Issue:** JWT token was readable via `document.cookie` (XSS risk)
-- **Fix:** Token now set as `httpOnly`, `Secure`, `SameSite=Lax` cookie
-- **Files:** `backend/app/auth/router.py`, `backend/app/auth/dependencies.py`, `frontend/src/clients/apiClient.ts`, `frontend/src/hooks/useAuth.ts`
-- **Cookie:** Named `token`, 7-day expiry, sent automatically with `withCredentials: true`
-
-### 3. CORS Restriction (Fixed)
-- **Issue:** `allow_origins=["*"]` with `allow_credentials=True` (browser rejects this)
-- **Fix:** CORS now uses `FRONTEND_ORIGIN` environment variable
-- **Files:** `backend/app/main.py`, `backend/app/config.py`
-
-### 4. IGDB Token Auto-Renewal (Fixed)
-- **Issue:** Static `IGDB_ACCESS_TOKEN` expired every ~60 days, required manual regeneration
-- **Fix:** Token fetched automatically from Twitch OAuth, cached in memory with expiry tracking, auto-refreshed before expiry
-- **Files:** `backend/app/games/igdbService.py`, `backend/app/config.py`
-- **Removed:** `IGDB_ACCESS_TOKEN` from required environment variables
 
 ## Development Setup
 
@@ -84,22 +58,7 @@ npm install
 npm run dev
 ```
 
-## API Endpoints
 
-### Authentication
-- `POST /auth/register` - Register new user (sets httpOnly cookie)
-- `POST /auth/login` - Login user (sets httpOnly cookie)
-- `POST /auth/logout` - Logout user (clears cookie)
-
-### Games
-- `GET /games/search?title={title}` - Search games via IGDB
-- `GET /games/{game_id}` - Get game details
-
-### Entries
-- `GET /entry` - Get user's entries (requires auth)
-- `POST /entry` - Create entry (requires auth)
-- `PUT /entry/{entry_id}` - Update entry (requires auth)
-- `DELETE /entry/{entry_id}` - Delete entry (requires auth)
 
 ## License
 
