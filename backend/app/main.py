@@ -6,6 +6,7 @@ from app.games.route import router as games_router
 from app.entry.route import router as entry_router
 from app.manga.route import router as manga_router
 from app.anime.route import router as anime_router
+from app.config import config
 
 # Base.metadata.create_all(bind=engine)
 app = FastAPI(title="TrackIt", version="0.1.0")
@@ -18,7 +19,7 @@ app.include_router(anime_router)
 
 app.add_middleware(
     CorsMiddleware,
-    allow_origins=["*"],
+    allow_origins=[config.FRONTEND_ORIGIN],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

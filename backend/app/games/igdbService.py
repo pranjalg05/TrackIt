@@ -1,9 +1,9 @@
-from datetime import datetime, time
+import time
+from datetime import datetime
 
 import requests
 from app.config import config
-from app.games.models import Game, GameSearchItem, sort_options
-
+from app.games.models import Game, GameSearchItem
 
 
 class IGDBService:
@@ -12,10 +12,41 @@ class IGDBService:
         self.session.headers.update(
             {
                 "accept": "application/json",
-                "Client-ID": config.TWITCH_DEVELOPER_CLIENT_ID,  # Replace with your actual Client ID
-                "Authorization": f"Bearer {config.IGDB_ACCESS_TOKEN}",  # Replace with your actual Access Token
+                "Client-ID": config.TWITCH_DEVELOPER_CLIENT_ID,
             }
         )
+        self._access_token: str | None = None
+        self._token_expiry: float = 0
+
+    def _get_igdb_token(self) -> str:
+        """Fetch a new IGDB access token from Twitch OAuth."""
+        url = "https://id.twitch.tv/oauth2/token"
+        payload = {
+            "client_id": config.TWITCH_DEVELOPER_CLIENT_ID,
+            "client_secret": config.TWITCH_DEVELOPER_CLIENT_SECRET,
+            "grant_type": "client_credentials",
+        }
+        response = requests.post(url, data=payload, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        self._access_token = data["access_token"]
+        # expires_in is in seconds; subtract 60s buffer for safety
+        self._token_expiry = time.time() + data.get("expires_in", 3600) - 60
+        return self._access_token
+
+    def _ensure_valid_token(self) -> str:
+        """Return a valid token, fetching a new one if needed."""
+        if not self._access_token or time.time() >= self._token_expiry:
+            return self._get_igdb_token()
+        return self._access_token
+
+    def _auth_headers(self) -> dict:
+        token = self._ensure_valid_token()
+        return {
+            "Authorization": f"Bearer {token}",
+            "Client-ID": config.TWITCH_DEVELOPER_CLIENT_ID,
+            "accept": "application/json",
+        }
 
     def search_game_by_title(
         self,
@@ -29,7 +60,7 @@ class IGDBService:
             "where game_type = (0, 4, 8, 9, 10, 11);\n"
             "limit 100;\n"
         )
-        response = self.session.post(url, data=query, timeout=(10, 30))
+        response = self.session.post(url, data=query, headers=self._auth_headers(), timeout=(10, 30))
         response.raise_for_status()
         games = response.json()
         return self._to_game_items(games)
@@ -78,7 +109,7 @@ class IGDBService:
     def get_game_details(self, game_id: int) -> Game | None:
         url = "https://api.igdb.com/v4/games"
         query = f"fields id, name, cover.image_id, storyline, first_release_date, total_rating, summary, platforms.name, genres.name; where id = {game_id};"
-        response = self.session.post(url, data=query, timeout=(10, 30))
+        response = self.session.post(url, data=query, headers=self._auth_headers(), timeout=(10, 30))
         response.raise_for_status()
         games = response.json()
 

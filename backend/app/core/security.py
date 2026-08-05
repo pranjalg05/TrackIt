@@ -1,7 +1,10 @@
 import jwt
 from datetime import datetime, timedelta, timezone
+from passlib.context import CryptContext
 from app.config import config
 
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def create_access_token(data: dict):
