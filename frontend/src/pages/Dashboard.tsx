@@ -9,14 +9,23 @@ const RATING_OPTIONS = Array.from({ length: 11 }, (_, i) => i);
 const DROPDOWN_CLASS =
     "px-2 py-1 rounded-sm bg-transparent border border-white/10 text-white text-sm uppercase tracking-widest outline-none cursor-pointer [color-scheme:dark] focus:border-[color:var(--purple-500)]";
 
+const MEDIA_TYPE_OPTIONS = [
+    { value: "anime", label: "ANIME" },
+    { value: "game", label: "GAME" },
+    { value: "movie", label: "MOVIE" },
+    { value: "tv_show", label: "TV SHOW" },
+    { value: "manga", label: "MANGA" },
+];
+
 export default function DashBoard() {
 
     const [sort, setSort] = useState<string>("updated_at");
     const [order, setOrder] = useState<string>("desc");
     const [minRating, setMinRating] = useState<number>(0);
     const [maxRating, setMaxRating] = useState<number>(10);
+    const [mediaType, setMediaType] = useState<string>("");
 
-    const { data: entries, isLoading } = useUserEntries({ sort, order, minRating, maxRating });
+    const { data: entries, isLoading } = useUserEntries({ sort, order, minRating, maxRating, type: mediaType || undefined });
     const { mutate: updateStatus, isPending } = useUpdateEntryStatus();
     const [changingId, setChangingId] = useState<number | null>(null);
     const [filter, setFilter] = useState<string>("All");
@@ -80,6 +89,22 @@ export default function DashBoard() {
                         }`}
                     >
                         {group.label}
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-6">
+                {MEDIA_TYPE_OPTIONS.map((mt) => (
+                    <button
+                        key={mt.value}
+                        onClick={() => setMediaType(mediaType === mt.value ? "" : mt.value)}
+                        className={`px-3 py-1 text-xs uppercase tracking-widest rounded-full border transition-colors cursor-pointer ${
+                            mediaType === mt.value
+                                ? "bg-[color:var(--purple-500)] border-[color:var(--purple-500)] text-white"
+                                : "text-white/60 border-white/15 hover:text-white hover:border-white/40"
+                        }`}
+                    >
+                        {mt.label}
                     </button>
                 ))}
             </div>

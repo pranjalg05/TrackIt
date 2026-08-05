@@ -26,15 +26,14 @@ def search_game(
 @router.post("/{game_id}/library")
 def add_game_to_library(
     game_id: int,
-    status: str = Body(...),
-    rating: float | None = Body(None),
+    status: str = Body(..., embed=True),
     user_id: int = Depends(get_current_user_id),
     game_service: GameService = Depends(get_game_service),
 ):
     """
     Add a game to the authenticated user's library.
     """
-    return game_service.add_game_to_library(game_id, user_id, status, rating)
+    return game_service.add_game_to_library(game_id, user_id, status)
 
 
 @router.get("/{game_id}")

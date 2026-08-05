@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Plus, Star, StickyNote } from "lucide-react";
+import { Minus, Plus, Star, StickyNote } from "lucide-react";
 import type { EntryItem } from "@/models/entries";
 import StatusBadge from "./StatusBadge";
 import StatusDropdown from "./StatusDropdown";
 import RatingPopUp from "./RatingPopUp";
 import NotePopUp from "./NotePopUp";
+import { useUpdateEntryCurrentEpisode } from "@/hooks/useEntries";
 
 const TYPE_ROUTE_MAP: Record<string, string> = {
   game: "game",
@@ -24,7 +25,22 @@ interface EntryCardProps {
 export default function EntryCard({ entry, onStatusChange, isUpdating }: EntryCardProps) {
   const [showRating, setShowRating] = useState(false);
   const [showNote, setShowNote] = useState(false);
+  const { mutate: updateEpisode, isPending: isUpdatingEpisode } = useUpdateEntryCurrentEpisode();
   const detailPath = `/${TYPE_ROUTE_MAP[entry.type] ?? entry.type}/${entry.external_id}`;
+
+  const isAnime = entry.type === "anime";
+  const currentEpisode = entry.current_episode ?? 0;
+  const totalEpisodes = entry.total_episodes ?? 0;
+  const showEpisodeTracker = isAnime && totalEpisodes > 0;
+
+  const adjustEpisode = (delta: number) => {
+    if (isUpdatingEpisode) return;
+    const min = 0;
+    const max = totalEpisodes > 0 ? totalEpisodes : currentEpisode + 1;
+    const next = Math.min(max, Math.max(min, currentEpisode + delta));
+    if (next === currentEpisode) return;
+    updateEpisode({ entry_id: entry.id, current_episode: next });
+  };
 
   return (
     <div className="flex items-center gap-4 p-3 border border-white/10 rounded-sm bg-white/[0.02] transition-colors hover:border-[color:var(--purple-500)] group">
@@ -48,6 +64,28 @@ export default function EntryCard({ entry, onStatusChange, isUpdating }: EntryCa
       </Link>
 
       <div className="flex items-center gap-4">
+        {showEpisodeTracker && (
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => adjustEpisode(-1)}
+              disabled={isUpdatingEpisode || currentEpisode <= 0}
+              className="flex items-center justify-center w-7 h-7 rounded-sm border border-white/10 text-white/60 cursor-pointer transition-colors hover:border-[color:var(--purple-500)] hover:[color:var(--purple-500)] disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Minus className="w-3.5 h-3.5" />
+            </button>
+            <span className="text-sm whitespace-nowrap" title="Episodes watched">
+              <span className="[color:var(--purple-500)] font-semibold">{currentEpisode}</span>
+              <span className="text-white/40">/{totalEpisodes}</span>
+            </span>
+            <button
+              onClick={() => adjustEpisode(1)}
+              disabled={isUpdatingEpisode || currentEpisode >= totalEpisodes}
+              className="flex items-center justify-center w-7 h-7 rounded-sm border border-white/10 text-white/60 cursor-pointer transition-colors hover:border-[color:var(--purple-500)] hover:[color:var(--purple-500)] disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
         {onStatusChange && (
           <StatusDropdown
             mediaType={entry.type}

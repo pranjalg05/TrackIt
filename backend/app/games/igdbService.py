@@ -27,7 +27,7 @@ class IGDBService:
             f'search "{title}";\n'
             "fields id, name, cover.image_id, first_release_date, total_rating, game_type;\n"
             "where game_type = (0, 4, 8, 9, 10, 11);\n"
-            "limit 90;\n"
+            "limit 100;\n"
         )
         response = self.session.post(url, data=query, timeout=(10, 30))
         response.raise_for_status()

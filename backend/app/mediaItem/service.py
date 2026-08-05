@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from app.anime.models import Anime
+from app.manga.models import Manga
 from app.games.models import Game
 from app.mediaItem.model import MediaItem, MediaItemSource, MediaItemType
-from app.movies.models import MovieItem
 
 class MediaService:
     def __init__(self, db: Session):
@@ -50,21 +51,67 @@ class MediaService:
 
         return game
 
-    def cache_movie(self, movie: MovieItem) -> MediaItem:
+    def get_cached_anime(self, external_id: str):
+        media_item = self.get_media_cached(source=MediaItemSource.ANILIST.value, external_id=external_id)
+        
+        if not media_item:
+            return None
+        
+        return self.db.query(Anime).filter(Anime.media_item_id == media_item.id).first()
+    
+    def cache_anime(self, anime: Anime):
         media_item = self.get_media_cached(
-            source=MediaItemSource.TMDB.value,
-            external_id=str(movie.id),
+            source=MediaItemSource.ANILIST.value,
+            external_id=str(anime.id),
         )
         if not media_item:
             media_item = MediaItem(
-                type=MediaItemType.MOVIE,
-                source=MediaItemSource.TMDB,
-                external_id=str(movie.id),
-                title=movie.title,
-                image_url=movie.poster_url,
+                type=MediaItemType.ANIME,
+                source=MediaItemSource.ANILIST,
+                external_id=str(anime.id),
+                title=anime.romaji_title,
+                image_url=anime.cover_url,
             )
             self.db.add(media_item)
             self.db.commit()
             self.db.refresh(media_item)
 
-        return media_item
+        anime.media_item_id = media_item.id
+        self.db.add(anime)
+        self.db.commit()
+        self.db.refresh(anime)
+
+        return anime
+
+    def get_cached_manga(self, external_id: str):
+        media_item = self.get_media_cached(source=MediaItemSource.ANILIST.value, external_id=external_id)
+
+        if not media_item:
+            return None
+
+        return self.db.query(Manga).filter(Manga.media_item_id == media_item.id).first()
+
+    def cache_manga(self, manga: Manga):
+        media_item = self.get_media_cached(
+            source=MediaItemSource.ANILIST.value,
+            external_id=str(manga.id),
+        )
+        if not media_item:
+            media_item = MediaItem(
+                type=MediaItemType.MANGA,
+                source=MediaItemSource.ANILIST,
+                external_id=str(manga.id),
+                title=manga.romaji_title,
+                image_url=manga.cover_url,
+            )
+            self.db.add(media_item)
+            self.db.commit()
+            self.db.refresh(media_item)
+
+        manga.media_item_id = media_item.id
+        self.db.add(manga)
+        self.db.commit()
+        self.db.refresh(manga)
+
+        return manga
+    

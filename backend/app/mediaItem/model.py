@@ -5,7 +5,6 @@ from sqlalchemy import ARRAY, String, UniqueConstraint
 
 from app.database import Base
 
-
 class MediaItemType(str, Enum):
     MOVIE = "movie"
     TV_SHOW = "tv_show"
@@ -16,7 +15,7 @@ class MediaItemType(str, Enum):
 class MediaItemSource(str, Enum):
     TMDB = "tmdb"
     IGDB = "igdb"
-    MAL = "mal"
+    ANILIST = "anilist"
 
 class MediaItem(Base):
     __tablename__ = "media_items"
@@ -32,6 +31,5 @@ class MediaItem(Base):
     entries: Mapped[list["Entry"]] = relationship(
         "Entry",
         back_populates="media_item",
-        cascade="all, delete-orphan",
-        lazy="selectin",
     )
+

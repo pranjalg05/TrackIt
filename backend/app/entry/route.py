@@ -34,6 +34,7 @@ def get_user_entries(
     order: str = Query("desc", description="Sort order, 'asc' or 'desc'"),
     min_rating: float | None = Query(None, description="Minimum rating (inclusive)"),
     max_rating: float | None = Query(None, description="Maximum rating (inclusive)"),
+    type: str | None = Query(None, description="Filter by media type: movie, tv_show, game, manga, anime"),
 ):
     """
     Get all library entries for the authenticated user.
@@ -44,6 +45,7 @@ def get_user_entries(
         order=order,
         min_rating=min_rating,
         max_rating=max_rating,
+        media_type=type,
     )
 
 
@@ -95,3 +97,15 @@ def update_entry_note(
     Update the note of a library entry for the authenticated user.
     """
     return entry_service.update_entry_note(entry_id, user_id, note)
+
+@router.patch("/{entry_id}/episode")
+def update_entry_current_episode(
+    entry_id: int,
+    current_episode: int = Body(..., embed=True),
+    user_id: int = Depends(get_current_user_id),
+    entry_service: EntryService = Depends(get_entry_service),
+):
+    """
+    Update the current episode progress of a library entry for the authenticated user.
+    """
+    return entry_service.update_entry_current_episode(entry_id, user_id, current_episode)

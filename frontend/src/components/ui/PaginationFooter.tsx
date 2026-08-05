@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationFooterProps {
   page: number;
-  totalPages: number;
+  totalPages?: number;
   hasMore: boolean;
   onPageChange: (page: number) => void;
 }
@@ -25,7 +25,8 @@ export default function PaginationFooter({
       </button>
 
       <span className="text-sm tracking-widest text-white/60">
-        Page <span className="[color:var(--purple-500)]">{page}</span> of <span className="[color:var(--purple-500)]">{totalPages}</span>
+        Page <span className="[color:var(--purple-500)]">{page}</span> 
+        {totalPages ? <> of <span className="[color:var(--purple-500)]">{totalPages}</span></> : ""}
       </span>
 
       <button

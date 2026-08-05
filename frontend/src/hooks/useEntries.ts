@@ -10,6 +10,7 @@ export interface UserEntriesParams {
     order?: string;
     minRating?: number;
     maxRating?: number;
+    type?: string;
 }
 
 export const useUserEntries = (params: UserEntriesParams = {}) => {
@@ -17,6 +18,7 @@ export const useUserEntries = (params: UserEntriesParams = {}) => {
         queryKey: ["userEntries", params],
         queryFn: async (): Promise<EntryItem[]> => {
             const queryParams: Record<string, string> = {};
+            if (params.type) queryParams.type = params.type;
             if (params.sort) queryParams.sort = params.sort;
             if (params.order) queryParams.order = params.order;
             if (params.minRating != null && params.minRating > 0) queryParams.min_rating = String(params.minRating);
@@ -84,6 +86,23 @@ export const useUpdateEntryNote = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["userEntries"] });
+        },
+    });
+}
+
+export const useUpdateEntryCurrentEpisode = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: { entry_id: number; current_episode: number }): Promise<EntryItem> => {
+            const response = await apiClient.patch(
+                `${BASE_URL}${ENTRY_BASE}/${data.entry_id}/episode`,
+                { current_episode: data.current_episode },
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["userEntries"] });
+            queryClient.invalidateQueries({ queryKey: ["entryByExternal"] });
         },
     });
 }

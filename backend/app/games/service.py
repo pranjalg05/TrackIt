@@ -14,6 +14,7 @@ class GameService:
         
     def search_game_by_title(self, title: str ):
         return self.igdb_service.search_game_by_title(title)  
+    
     def get_game_details(self, game_id: int):        
         cached_game = self.media_service.get_cached_game(str(game_id))
         
@@ -22,7 +23,7 @@ class GameService:
         
         return self.igdb_service.get_game_details(game_id)
     
-    def add_game_to_library(self, game_id: int, user_id: int, status: str, rating: float | None = None):
+    def add_game_to_library(self, game_id: int, user_id: int, status: str):
 
         cached_game = self.media_service.get_cached_game(str(game_id))
 
@@ -34,5 +35,4 @@ class GameService:
             user_id,
             cached_game.media_item_id,
             status,
-            rating,
         )

@@ -1,10 +1,10 @@
 import SearchBar from "@/components/ui/SearchBar";
 import PaginationFooter from "@/components/ui/PaginationFooter";
 import { useSearchGameByTitle } from "@/hooks/useGames";
-import MediaCard from "@/components/ui/MediaCard";
+import GameCard from "@/components/media/GameCard";
 import { ScaleLoader } from "react-spinners";
 import SortDropDown from "@/components/ui/SortDropDown";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export default function GamePage() {
@@ -15,9 +15,8 @@ export default function GamePage() {
   const [order, setOrder] = useState<string>("desc");
   const { data: games, isLoading } = useSearchGameByTitle(title);
   const [page, setPage] = useState(1);
-  const [sortedGames, setSortedGames] = useState<typeof games>([]);
 
-  useEffect(() => {
+  const sortedGames = useMemo(() => {
     const sorted = [...(games || [])];
 
     if (sort === "rating") {
@@ -34,7 +33,7 @@ export default function GamePage() {
       });
     }
 
-    setSortedGames(sorted.slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page));
+    return sorted.slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page);
   }, [games, page, sort, order]);
 
   const handleSearch = (query: string) => {
@@ -51,7 +50,7 @@ export default function GamePage() {
   };
 
   return (
-    <div className="flex flex-col items-center h-full">
+    <div className="flex flex-col items-center h-full p-4">
       <SearchBar
         placeholder="Search for a game..."
         defaultValue={title}
@@ -61,6 +60,10 @@ export default function GamePage() {
         <SortDropDown
           sort={sort}
           order={order}
+          options={[
+            { value: "rating", label: "Rating" },
+            { value: "release_date", label: "Release Date" },
+          ]}
           onSortChange={setSort}
           onOrderChange={setOrder}
         />
@@ -76,18 +79,17 @@ export default function GamePage() {
         <>
           <div className="flex flex-wrap mt-4">
             {sortedGames.map((game) => (
-              <MediaCard
+              <GameCard
                 key={game.id}
                 id={game.id}
                 title={game.title}
                 imageUrl={game.cover_url}
                 rating={game.rating}
                 releaseDate={game.release_date}
-                type="game"
               />
             ))}
           </div>
-          {games && games.length > PAGE_SIZE * page && (
+          {games && games.length > PAGE_SIZE && (
             <PaginationFooter
               page={page}
               totalPages={Math.ceil((games.length || 0) / PAGE_SIZE)}

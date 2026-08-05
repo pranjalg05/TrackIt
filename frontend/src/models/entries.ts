@@ -9,6 +9,8 @@ export interface EntryItem {
     type: string;
     source: string;
     external_id: string;
+    current_episode: number | null;
+    total_episodes: number | null;
     started_at: string | null;
     finished_at: string | null;
     updated_at: string | null;

@@ -1,36 +1,34 @@
-interface MediaCardProps {
+interface GameCardProps {
   id: number;
   title: string;
   imageUrl?: string;
   rating?: number;
   releaseDate?: string;
-  type: "movie" | "tv-show" | "anime" | "game";
 }
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function MediaCard({
+export default function GameCard({
   id,
   title,
   imageUrl,
   rating,
   releaseDate,
-  type,
-}: MediaCardProps) {
+}: GameCardProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
   const year = releaseDate ? releaseDate.split("-")[0] : "";
 
   return (
-    <div
-      className="w-48 bg-gray-800 rounded-sm overflow-hidden shadow-lg m-3 relative group"
+<div
+      className="w-56 bg-gray-800 rounded-sm overflow-hidden shadow-lg m-3 relative group"
       title={title}
     >
-      <Link to={`/${type}/${id}`} className="block relative">
+      <Link to={`/game/${id}`} className="block relative">
         <img
-          className={`w-full h-64 object-cover transition-opacity duration-300 ${
+          className={`w-full h-80 object-cover transition-opacity duration-300 ${
             hasError || !imageUrl
               ? "hidden"
               : isLoading

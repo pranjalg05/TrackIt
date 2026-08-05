@@ -2,11 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
 import DashBoard from "@/pages/Dashboard";
 import LoginPage from "@/pages/auth/LoginPage";
-import MoviePage from "@/pages/movies/MoviePage";
 import RegisterPage from "@/pages/auth/RegisterPage";
-import MovieDetailPage from "@/pages/movies/MovieDetailPage";
 import GamePage from "./pages/games/GamePage";
 import GameDetailPage from "./pages/games/GameDetailPage";
+import AnimePage from "./pages/anime/AnimePage";
+import MangaPage from "@/pages/manga/MangaPage";
+import MangaDetailPage from "@/pages/manga/MangaDetailPage";
+import AnimeDetailPage from "./pages/anime/AnimeDetailPage";
 
 function App() {
   return (
@@ -22,27 +24,19 @@ function App() {
         />
 
         <Route
-          path="/movies"
+          path="/games"
           element={
             <AppLayout>
-              <MoviePage />
-            </AppLayout>
-          }
-        />
-        <Route
-          path="/movie/:id"
-          element={
-            <AppLayout>
-              <MovieDetailPage />
+              <GamePage />
             </AppLayout>
           }
         />
 
         <Route
-          path="/games"
+          path="/anime"
           element={
             <AppLayout>
-              <GamePage />
+              <AnimePage />
             </AppLayout>
           }
         />
@@ -56,7 +50,34 @@ function App() {
           }
         />
 
-        <Route path="/login" element={<LoginPage />} />
+         <Route
+           path="/anime/:id"
+           element={
+             <AppLayout>
+               <AnimeDetailPage />
+             </AppLayout>
+           }
+         />
+
+         <Route
+           path="/manga"
+           element={
+             <AppLayout>
+               <MangaPage />
+             </AppLayout>
+           }
+         />
+
+         <Route
+           path="/manga/:id"
+           element={
+             <AppLayout>
+               <MangaDetailPage />
+             </AppLayout>
+           }
+         />
+
+         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>

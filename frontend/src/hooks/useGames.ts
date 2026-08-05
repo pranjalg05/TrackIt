@@ -23,18 +23,18 @@ export const useGameById = (id: number) => {
     return useQuery({
         queryKey: ["gameById", id],
         queryFn: async (): Promise<GameDetailItem> => {
-            const response = apiClient.get(`${BASE_URL}${GAME_BASE}/${id}`);
-            return (await response).data;
+            const response =  await apiClient.get(`${BASE_URL}${GAME_BASE}/${id}`);
+            return  response.data;
         }
     });
 }
 
 export const useAddGameToLibrary = () => {
     return useMutation({
-        mutationFn: async (data: { game_id: number; status: string; rating?: number | null }): Promise<EntryItem> => {
+        mutationFn: async (data: { game_id: number; status: string;  }): Promise<EntryItem> => {
             const response = await apiClient.post(
                 `${BASE_URL}${GAME_BASE}/${data.game_id}/library`,
-                { status: data.status, rating: data.rating ?? null },
+                { status: data.status },
             );
             return response.data;
         },
