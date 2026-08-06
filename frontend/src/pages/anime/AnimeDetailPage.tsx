@@ -39,7 +39,7 @@ export default function AnimeDetailPage() {
     return <p className="text-white">Anime Data not found.</p>;
   }
 
-  const title = anime.romaji_title || anime.english_title;
+  const title = anime.romaji_title || anime.english_title || "";
   const year = anime.start_date ? anime.start_date.split("-")[0] : "";
   const cleanDescription = anime.description
     ? anime.description.replace(/<[^>]*>/g, "")
@@ -66,7 +66,7 @@ export default function AnimeDetailPage() {
             <div className="flex flex-col gap-2">
               <div className="shrink-0">
                 <img
-                  src={anime.cover_url}
+                  src={anime.cover_url ?? ""}
                   alt={title}
                   className="w-64 rounded-sm shadow-lg border border-white/10"
                 />

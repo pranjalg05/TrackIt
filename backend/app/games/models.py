@@ -1,5 +1,3 @@
-from turtle import title
-
 from pydantic import BaseModel
 from sqlalchemy import ARRAY, String
 from sqlalchemy.orm import Mapped, mapped_column

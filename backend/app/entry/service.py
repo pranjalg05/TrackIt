@@ -106,7 +106,7 @@ class EntryService:
 
         return self._serialize(entry) if entry else None
 
-    def create_entry(self, user_id: int, media_item_id: int, status: str):
+    def create_entry(self, user_id: int, media_item_id: int, status: str, rating: float | None = None):
         existing = self.db.query(Entry).filter(
             Entry.user_id == user_id,
             Entry.media_item_id == media_item_id,
@@ -119,6 +119,7 @@ class EntryService:
             user_id=user_id,
             media_item_id=media_item_id,
             status=status,
+            rating=round(rating, 1) if rating is not None else None,
         )
         self.db.add(new_entry)
         self.db.commit()

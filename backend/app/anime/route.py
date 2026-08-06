@@ -32,5 +32,5 @@ def add_anime_to_library(
     return anime_service.add_anime_to_library(anime_id, user_id, status)
 
 @router.get("/{anime_id}")
-def get_anime_by_id(anime_id: str, anime_service = Depends(get_anime_service)):
-    return anime_service.get_anime_by_id(int(anime_id));
+def get_anime_by_id(anime_id: int, anime_service = Depends(get_anime_service)):
+    return anime_service.get_anime_by_id(anime_id)

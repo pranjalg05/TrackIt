@@ -37,13 +37,13 @@ def clear_auth_cookie(response: Response):
 @router.post("/register", response_model=RegisterResponse)
 async def register_user(response: Response, request: RegisterRequest, auth_service: AuthService = Depends(get_auth_service)):
     result = auth_service.register_user(request)
-    set_auth_cookie(response, result.token)
+    set_auth_cookie(response, result["token"])
     return result
 
 @router.post("/login", response_model=LoginResponse)
 async def login_user(response: Response, request: LoginRequest, auth_service: AuthService = Depends(get_auth_service)):
     result = auth_service.login_user(request)
-    set_auth_cookie(response, result.token)
+    set_auth_cookie(response, result["token"])
     return result
 
 @router.post("/logout")

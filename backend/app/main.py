@@ -4,7 +4,6 @@ from app.database import Base, engine
 from app.auth.router import router as auth_router
 from app.games.route import router as games_router
 from app.entry.route import router as entry_router
-from app.manga.route import router as manga_router
 from app.anime.route import router as anime_router
 from app.config import config
 
@@ -14,7 +13,6 @@ app = FastAPI(title="TrackIt", version="0.1.0")
 app.include_router(auth_router)
 app.include_router(games_router)
 app.include_router(entry_router)
-app.include_router(manga_router)
 app.include_router(anime_router)
 
 app.add_middleware(

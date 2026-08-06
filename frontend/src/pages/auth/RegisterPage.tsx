@@ -16,10 +16,10 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const newErrors: Errors = {};
-    if (!username) {
+    if (!username.trim()) {
       newErrors.username = "Username is required";
     }
-    if (!password) {
+    if (!password.trim()) {
       newErrors.password = "Password is required";
     }
     setErrors(Object.keys(newErrors).length > 0 ? newErrors : null);
@@ -35,7 +35,7 @@ export default function RegisterPage() {
     }
 
     registerMutation.mutate(
-      { username, password },
+      { username: username.trim(), password: password.trim()  },
       {
         onSuccess: () => navigate("/dashboard"),
       }

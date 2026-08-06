@@ -19,7 +19,7 @@ export default function SideBar() {
     },
     { name: "Games", href: "/games", icon: Gamepad2, wip: false },
     { name: "Anime", href: "/anime", icon: Database, wip: false },
-    { name: "Manga", href: "/manga", icon: BookCopy, wip: false },
+    { name: "Manga", href: "/manga", icon: BookCopy, wip: true },
     { name: "Movies", href: "/movies", icon: Clapperboard, wip: true },
     { name: "TV Shows", href: "/tv-shows", icon: TvMinimal, wip: true },
   ];

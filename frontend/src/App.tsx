@@ -6,8 +6,6 @@ import RegisterPage from "@/pages/auth/RegisterPage";
 import GamePage from "./pages/games/GamePage";
 import GameDetailPage from "./pages/games/GameDetailPage";
 import AnimePage from "./pages/anime/AnimePage";
-import MangaPage from "@/pages/manga/MangaPage";
-import MangaDetailPage from "@/pages/manga/MangaDetailPage";
 import AnimeDetailPage from "./pages/anime/AnimeDetailPage";
 
 function App() {
@@ -55,24 +53,6 @@ function App() {
            element={
              <AppLayout>
                <AnimeDetailPage />
-             </AppLayout>
-           }
-         />
-
-         <Route
-           path="/manga"
-           element={
-             <AppLayout>
-               <MangaPage />
-             </AppLayout>
-           }
-         />
-
-         <Route
-           path="/manga/:id"
-           element={
-             <AppLayout>
-               <MangaDetailPage />
              </AppLayout>
            }
          />
