@@ -4,9 +4,9 @@ A media tracking application with FastAPI backend and React frontend.
 
 ## Features
 
-- Track games, anime, and manga
+- Track games, anime
 - User authentication with JWT tokens
-- Integration with IGDB, TMDB, and AniList APIs
+- Integration with IGDB and AniList APIs
 
 ## Tech Stack
 
@@ -24,8 +24,6 @@ A media tracking application with FastAPI backend and React frontend.
 | `ALGORITHM` | JWT algorithm (e.g., HS256) | Yes |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiry in minutes | Yes |
 | `DEBUG` | Enable debug mode (disables Secure cookie flag) | No (default: false) |
-| `TMDB_API_KEY` | TMDB API key | Yes |
-| `TMDB_API_READ_ACCESS_TOKEN` | TMDB read access token | Yes |
 | `TWITCH_DEVELOPER_CLIENT_ID` | Twitch/IGDB client ID | Yes |
 | `TWITCH_DEVELOPER_CLIENT_SECRET` | Twitch/IGDB client secret | Yes |
 | `FRONTEND_ORIGIN` | Frontend URL for CORS (e.g., `http://localhost:5173`) | Yes |
