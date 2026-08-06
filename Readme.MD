@@ -56,6 +56,9 @@ npm install
 npm run dev
 ```
 
+### Screenshots
+
+1. Anime Search Page
 
 
 ## License
