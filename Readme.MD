@@ -58,7 +58,20 @@ npm run dev
 
 ### Screenshots
 
-1. Anime Search Page
+#### Anime Search Page
+![Anime Search Page](screenshots/anime-search-page.png)
+
+#### Anime Detail Page
+![Anime Detail Page](screenshots/anime-detail-page.png)
+
+#### Game Search Page
+![Game Search Page](screenshots/game-search-page.png)
+
+#### Game Detail Page
+![Game Detail Page](screenshots/game-detail-page.png)
+
+#### Your Library Page
+![Your Library Page](screenshots/your-library-page.png)
 
 
 ## License
