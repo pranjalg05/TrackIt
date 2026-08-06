@@ -74,6 +74,3 @@ npm run dev
 ![Your Library Page](screenshots/your-library-page.png)
 
 
-## License
-
-MIT
