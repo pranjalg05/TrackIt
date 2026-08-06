@@ -6,21 +6,17 @@ class Settings(BaseSettings):
     
     SQLALCHEMY_DATABASE_URL: str
     
-    TMDB_IMAGE_BASE: str = "https://image.tmdb.org/t/p/w500"
     
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     DEBUG: bool = False
     
-    TMDB_API_KEY: str
-    TMDB_API_READ_ACCESS_TOKEN: str
-    
     IGDB_BASE_URL: str = "https://api.igdb.com/v4"
     TWITCH_DEVELOPER_CLIENT_ID: str
     TWITCH_DEVELOPER_CLIENT_SECRET: str
     
-    FRONTEND_ORIGIN: str = "http://localhost:5173"
+    FRONTEND_ORIGIN: str 
     
     model_config = {
         "env_file": ".env",
